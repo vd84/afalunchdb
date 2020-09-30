@@ -40,16 +40,14 @@ namespace afalunchdb {
                 Console.ReadLine ();
 
             }
-
-
-
+            //Receive the json obj
             menuItems = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, List<MenuItem>>> (jsonAllDays);
-
+            //Print json obj
             foreach (var item in menuItems) {
                 System.Console.WriteLine(item.Key);
-
                 foreach(var lunchitem in item.Value){
                     System.Console.WriteLine(lunchitem.Title);
+                    dbManager.INSERTINTOMENU(item.Key, lunchitem.Title, lunchitem.Ingredients, lunchitem.Price, lunchitem.IdOfRestaurant);
                 }
             }
             //dbManager.INSERTINTORESTAURANG ();
