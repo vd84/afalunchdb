@@ -11,8 +11,9 @@ namespace afalunchdb {
     class Program {
         static void Main (string[] args) {
 
-            DbManager dbManager = new DbManager (); 
-            List<MenuItem> menuItems = null;
+            DbManager dbManager = new DbManager ();
+            Dictionary<int, List<MenuItem>> menuItems = null;
+            string jsonAllDays = "";
 
             var factory = new ConnectionFactory () { HostName = "localhost" };
             using (var connection = factory.CreateConnection ())
@@ -27,9 +28,8 @@ namespace afalunchdb {
                 consumer.Received += (model, ea) => {
                     var body = ea.Body.ToArray ();
                     var message = Encoding.UTF8.GetString (body);
-                    Console.WriteLine (" [x] Received {0}", message);
-                    menuItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<MenuItem>> (message);
-                    System.Console.WriteLine("MENU ITEMS LIST " + menuItems.Count);
+                    //Console.WriteLine (" [x] Received {0}", message);
+                    jsonAllDays = message;
 
                 };
                 channel.BasicConsume (queue: "insertveckansluncher",
@@ -42,8 +42,17 @@ namespace afalunchdb {
             }
 
 
-       
-           //dbManager.INSERTINTORESTAURANG ();
+
+            menuItems = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, List<MenuItem>>> (jsonAllDays);
+
+            foreach (var item in menuItems) {
+                System.Console.WriteLine(item.Key);
+
+                foreach(var lunchitem in item.Value){
+                    System.Console.WriteLine(lunchitem.Title);
+                }
+            }
+            //dbManager.INSERTINTORESTAURANG ();
         }
     }
 }
