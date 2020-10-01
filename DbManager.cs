@@ -28,5 +28,18 @@ namespace database.manager {
             System.Console.WriteLine ("RESULTAS: " + result); */
         }
 
+
+        public string SelectAllDishes () {
+
+            var sql = "SELECT * FROM MENU";
+
+            var cmd = new NpgsqlCommand(sql, this.Connection);
+
+            return cmd.ExecuteScalar().ToString();
+
+
+
+        }
+
     }
 }

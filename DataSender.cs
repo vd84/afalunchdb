@@ -1,0 +1,39 @@
+using database.manager;
+using RabbitMQ;
+using Newtonsoft;
+using System.Text;
+using Npgsql;
+using RabbitMQ.Client;
+using System;
+namespace Sender.Data {
+    public class DataSender {
+
+        public void SendAllData (string data) {
+
+            var factory = new ConnectionFactory () { HostName = "localhost" };
+            using (var connection = factory.CreateConnection ()) {
+                using (var channel = connection.CreateModel ()) {
+                    channel.QueueDeclare (queue: "datafromdatabase",
+                        durable : false,
+                        exclusive : false,
+                        autoDelete : false,
+                        arguments : null);
+
+                    var body = Encoding.UTF8.GetBytes (data);
+
+                    channel.BasicPublish (exchange: "",
+                        routingKey: "datafromdatabase",
+                        basicProperties : null,
+                        body : body);
+                    Console.WriteLine (" [x] Sent {0}", data);
+
+                }
+
+
+
+        }
+
+
+
+    }
+}
