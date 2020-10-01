@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using database.manager;
 using Dbitems.MenuItem;
-using Newtonsoft;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -14,8 +13,8 @@ namespace Receiver.Diwine {
             DbManager dbManager = new DbManager ();
             Dictionary<int, List<MenuItem>> menuItems = null;
             string jsonAllDays = "";
-
             var factory = new ConnectionFactory () { HostName = "localhost" };
+
             using (var connection = factory.CreateConnection ())
             using (var channel = connection.CreateModel ()) {
                 channel.QueueDeclare (queue: "insertdiwinemenu",
@@ -39,8 +38,8 @@ namespace Receiver.Diwine {
 
                 Console.WriteLine (" Press [enter] to exit.");
                 Console.ReadLine ();
-
             }
+
             //Receive the json obj
             menuItems = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, List<MenuItem>>> (jsonAllDays);
             //Print json obj
@@ -51,7 +50,6 @@ namespace Receiver.Diwine {
                     dbManager.INSERTINTOMENU(item.Key, lunchitem.Title, lunchitem.Ingredients, lunchitem.Price, lunchitem.IdOfRestaurant);
                 }
             }
-            //dbManager.INSERTINTORESTAURANG ();
         }
     }
 }

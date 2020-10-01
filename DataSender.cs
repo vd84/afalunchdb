@@ -1,9 +1,5 @@
 using System;
 using System.Text;
-using database.manager;
-using Newtonsoft;
-using Npgsql;
-using RabbitMQ;
 using RabbitMQ.Client;
 namespace Sender.Data {
     public class DataSender {
@@ -28,11 +24,10 @@ namespace Sender.Data {
                     Console.WriteLine (" [x] Sent {0}", data);
 
                 }
+                
                 Console.WriteLine (" Press [enter] to exit.");
                 Console.ReadLine ();
-
             }
-
         }
     }
 }

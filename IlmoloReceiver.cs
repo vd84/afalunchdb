@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using database.manager;
 using Dbitems.MenuItem;
-using Newtonsoft;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -40,6 +39,7 @@ namespace Receiver.Ilmolo {
                 Console.ReadLine ();
 
             }
+
             //Receive the json obj
             menuItems = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, List<MenuItem>>> (jsonAllDays);
             //Print json obj
@@ -50,7 +50,6 @@ namespace Receiver.Ilmolo {
                     dbManager.INSERTINTOMENU(item.Key, lunchitem.Title, lunchitem.Ingredients, lunchitem.Price, lunchitem.IdOfRestaurant);
                 }
             }
-            //dbManager.INSERTINTORESTAURANG ();
         }
     }
 }
