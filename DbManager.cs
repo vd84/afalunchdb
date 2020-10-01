@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
+using Dbitems.MenuItem;
 using Npgsql;
-
+using Newtonsoft;
 namespace database.manager {
     public class DbManager {
 
@@ -23,21 +25,34 @@ namespace database.manager {
 
             var cmd = new NpgsqlCommand (sql, this.Connection);
 
-            /* var result =  */cmd.ExecuteScalar ()/* .ToString () */;
-/* 
-            System.Console.WriteLine ("RESULTAS: " + result); */
+            /* var result =  */
+            cmd.ExecuteScalar () /* .ToString () */ ;
+            /* 
+                        System.Console.WriteLine ("RESULTAS: " + result); */
         }
-
 
         public string SelectAllDishes () {
 
             var sql = "SELECT * FROM MENU";
 
-            var cmd = new NpgsqlCommand(sql, this.Connection);
+            var cmd = new NpgsqlCommand (sql, this.Connection);
 
-            return cmd.ExecuteScalar().ToString();
+            NpgsqlDataReader data = cmd.ExecuteReader ();
 
+            List<MenuItem> listOfMenuItems = new List<MenuItem> ();
 
+            while (data.Read ()) {
+                MenuItem menuItem = new MenuItem () {
+                    Id = int.Parse (data[1].ToString ()),
+                    Title = data[2].ToString (),
+                    Ingredients = data[3].ToString (),
+                    Price = int.Parse (data[4].ToString ()),
+                    IdOfRestaurant = int.Parse (data[5].ToString ())
+                };
+                listOfMenuItems.Add (menuItem);
+            }
+            string jsonList = Newtonsoft.Json.JsonConvert.SerializeObject(listOfMenuItems, Newtonsoft.Json.Formatting.Indented);
+            return jsonList;
 
         }
 
